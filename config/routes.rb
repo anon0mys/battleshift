@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'welcome#index'
-  resources :users, only: %i[new]
+  get '/register', to: 'users#new'
 
   namespace :api do
     namespace :v1 do
