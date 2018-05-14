@@ -9,6 +9,6 @@ RSpec.describe RegistrationMailer, type: :mailer do
 
     expect(email.to.first).to eq(user.email)
     expect(email.subject).to eq('Battleshift Account Confirmation')
-    expect(email.body.to_s).to eq(expected_body)
+    expect(email.html_part.body.to_s).to include(expected_body)
   end
 end
