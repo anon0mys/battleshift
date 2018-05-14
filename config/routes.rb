@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root 'welcome#index'
+  resources :users, only: %i[new]
 
   namespace :api do
     namespace :v1 do
