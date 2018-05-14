@@ -7,6 +7,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       flash[:success] = 'Registration successful'
+      session[:user_id] = @user.id
       redirect_to dashboard_path
     else
       flash[:error] = 'Registration unsuccessful'
