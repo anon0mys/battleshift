@@ -1,0 +1,22 @@
+require 'rails_helper'
+
+feature 'user logs in' do
+  context 'and registers for the first time' do
+    scenario 'and gets to dashboard with not activated message' do
+      visit '/'
+      click_on 'Register'
+
+      expect(current_path).to eq('/register')
+
+      fill_in 'user[name]', with: 'TestName'
+      fill_in 'user[email]', with: 'Test@mail.com'
+      fill_in 'user[password]', with: 'password'
+      fill_in 'user[password_confirmation]', with: 'password'
+      click_on 'submit'
+
+      expect(current_path).to eq('/dashboard')
+      expect(page).to have_content('Logged in as TestName')
+      expect(page).to have_content('This account has not yet been activated. Please check your email.')
+    end
+  end
+end
