@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get '/register', to: 'users#new'
   get '/dashboard', to: 'dashboard#show'
-  resources :activation, only: %i[update]
+  get '/activation', to: 'activation#update'
   resources :users, only: %i[create]
 
   namespace :api do

@@ -19,11 +19,13 @@ feature 'user logs in' do
       expect(page).to have_content('This account has not yet been activated. Please check your email.')
     end
 
-    scenario 'activates account through email activation link' do
+    scenario 'and activates account through email activation link' do
       user = create(:user)
       expect(user.status).to eq 'inactive'
 
-      page.driver.put(activation_path(user), { authentication: { token: '12345' } })
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+
+      visit activation_path(user.id)
 
       expect(current_path).to eq(activation_path(user))
       expect(page).to have_content 'Thank you! Your account is now activated.'
