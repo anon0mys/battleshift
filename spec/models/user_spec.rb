@@ -14,4 +14,18 @@ RSpec.describe User, type: :model do
       expect(user.api_key).to_not be_nil
     end
   end
+
+  describe 'user status' do
+    it 'should have a default status of inactive' do
+      user = create(:user)
+
+      expect(user.status).to eq 'inactive'
+    end
+
+    it 'can be set to active' do
+      user = create(:user, status: 'active')
+
+      expect(user.status).to eq 'active'
+    end
+  end
 end
