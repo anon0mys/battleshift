@@ -23,7 +23,7 @@ feature 'user logs in' do
       user = create(:user)
       expect(user.status).to eq 'inactive'
 
-      page.driver.put(activation_path(user), { params: { token: '12345' } })
+      page.driver.put(activation_path(user), { authentication: { token: '12345' } })
 
       expect(current_path).to eq(activation_path(user))
       expect(page).to have_content 'Thank you! Your account is now activated.'
