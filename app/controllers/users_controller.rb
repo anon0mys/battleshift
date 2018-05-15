@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.set_api_key
     if @user.save
       flash[:success] = 'Registration successful'
       session[:user_id] = @user.id
