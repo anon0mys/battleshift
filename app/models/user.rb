@@ -6,11 +6,7 @@ class User < ApplicationRecord
   has_secure_password
   enum status: ['inactive', 'active']
 
-  before_validation :set_api_key
-
-  private
-
-    def set_api_key
-      self.api_key = ApiKey.generate
-    end
+  def set_api_key
+    self.api_key = ApiKey.generate
+  end
 end
