@@ -13,6 +13,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'active_model_serializers', '0.10'
 gem 'figaro'
 gem 'bcrypt', '~> 3.1.7'
+gem 'sendgrid-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
