@@ -21,11 +21,11 @@ feature 'user logs in' do
 
     scenario 'activates account through email activation link' do
       user = create(:user)
-      expect(user.status).to eq 'incative'
+      expect(user.status).to eq 'inactive'
 
-      visit activate_path(user)
+      page.driver.put(activation_path(user), { params: { token: '12345' } })
 
-      expect(current_path).to eq(activate_path)
+      expect(current_path).to eq(activation_path(user))
       expect(page).to have_content 'Thank you! Your account is now activated.'
 
       click_on 'Dashboard'
