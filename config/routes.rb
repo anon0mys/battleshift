@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get '/register', to: 'users#new'
   get '/dashboard', to: 'dashboard#show'
+  get '/activate', to: 'users#update'
   resources :users, only: %i[create]
 
   namespace :api do
