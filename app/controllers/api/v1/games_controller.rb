@@ -5,8 +5,8 @@ class Api::V1::GamesController < ApiController
   end
 
   def create
-    player_1 = Player.new(Board.new(4))
-    player_2 = Player.new(Board.new(4))
+    player_1 = PlayerDecorator.new(User.find_by(api_key: request.headers['X-API-Key']), Board.new(4))
+    player_2 = PlayerDecorator.new(User.find_by(email: params[:opponent_email]), Board.new(4))
 
     render json: Game.create({
       player_1_board: player_1.board,
