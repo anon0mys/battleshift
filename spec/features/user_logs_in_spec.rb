@@ -18,5 +18,21 @@ feature 'user logs in' do
       expect(page).to have_content('Logged in as TestName')
       expect(page).to have_content('This account has not yet been activated. Please check your email.')
     end
+
+    scenario 'activates account through email activation link' do
+      user = create(:user)
+      expect(user.status).to eq 'incative'
+
+      visit activate_path(user)
+
+      expect(current_path).to eq(activate_path)
+      expect(page).to have_content 'Thank you! Your account is now activated.'
+
+      click_on 'Dashboard'
+
+      expect(current_path).to eq(dashboard_path)
+      expect(page).to_not have_content('This account has not yet been activated. Please check your email.')
+      expect(page).to have_content('Status: Active')
+    end
   end
 end
