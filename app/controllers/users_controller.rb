@@ -8,6 +8,7 @@ class UsersController < ApplicationController
     if @user.save
       flash[:success] = 'Registration successful'
       session[:user_id] = @user.id
+      RegistrationMailer.confirmation_email(@user).deliver_now
       redirect_to dashboard_path
     else
       flash[:error] = 'Registration unsuccessful'
