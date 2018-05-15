@@ -1,5 +1,5 @@
 module ApiKey
   def self.generate
-    'String'
+    SecureRandom.base64.tr('+,/', 'aBc')
   end
 end
