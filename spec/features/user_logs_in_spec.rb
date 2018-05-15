@@ -20,10 +20,18 @@ feature 'user logs in' do
     end
 
     scenario 'and activates account through email activation link' do
-      user = create(:user)
-      expect(user.status).to eq 'inactive'
+      visit register_path
 
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+      fill_in 'user[name]', with: 'Name'
+      fill_in 'user[email]', with: 'Test@mail.com'
+      fill_in 'user[password]', with: 'password'
+      fill_in 'user[password_confirmation]', with: 'password'
+      click_on 'submit'
+
+      email = ActionMailer::Base.deliveries.last
+      expect(email.to.first).to eq('Test@mail.com')
+
+      user = User.find_by(name: 'Name')
 
       visit activation_path(user.id)
 
