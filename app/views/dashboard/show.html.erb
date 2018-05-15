@@ -1,5 +1,6 @@
 <span class="username">Logged in as <%= @user.name %></span>
 <% if @user.active? %>
+  <span>Status: Active</span>
 <% else %>
   <span>This account has not yet been activated. Please check your email.</span>
 <% end %>
