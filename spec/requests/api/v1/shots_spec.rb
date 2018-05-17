@@ -141,6 +141,43 @@ describe "Api::V1::Shots" do
 
         expected_messages = "Invalid move. It's your opponent's turn"
       end
+
+      it 'allows player 2 to shoot at player 1 board' do
+        new_player_1_board = Board.new(4)
+
+        ShipPlacer.new(board: new_player_1_board,
+          ship: sm_ship,
+          start_space: "A1",
+          end_space: "A2").run
+          
+        game = create(:game,
+          player_1: user_1.id,
+          player_2: user_2.id,
+          player_1_board: new_player_1_board,
+          player_2_board: player_2_board,
+          current_turn: 'player_2'
+        )
+
+        headers = {
+         'CONTENT_TYPE' => 'application/json',
+         'X-API-Key' => user_2.api_key
+         }
+
+        json_payload = {target: "A1"}.to_json
+
+        post "/api/v1/games/#{game.id}/shots", params: json_payload, headers: headers
+
+        expect(response).to be_success
+
+        game = JSON.parse(response.body, symbolize_names: true)
+
+        expected_messages = "Your shot resulted in a Hit."
+        player_1_targeted_space = game[:player_1_board][:rows].first[:data].first[:status]
+
+
+        expect(game[:message]).to eq expected_messages
+        expect(player_1_targeted_space).to eq("Hit")
+      end
     end
   end
 end
