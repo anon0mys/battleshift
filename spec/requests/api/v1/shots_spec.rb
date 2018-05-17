@@ -68,7 +68,7 @@ describe "Api::V1::Shots" do
       it "updates the message but not the board with invalid coordinates" do
         player_1_board = Board.new(1)
         player_2_board = Board.new(1)
-        game = create(:game, player_1_board: player_1_board, player_2_board: player_2_board)
+        game = create(:game, player_1: user_1.id, player_1_board: player_1_board, player_2_board: player_2_board)
 
         headers = {
           'CONTENT_TYPE' => 'application/json',
