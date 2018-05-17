@@ -16,7 +16,7 @@ class Game < ApplicationRecord
     end
   end
 
-  def active_player_board
+  def active_board
     if current_turn == 'player_1'
       player_1_board
     elsif current_turn == 'player_2'
@@ -29,6 +29,14 @@ class Game < ApplicationRecord
       player_2_board
     elsif current_turn == 'player_2'
       player_1_board
+    end
+  end
+
+  def switch_turn
+    if current_turn == 'player_1'
+      self.current_turn = 'player_2'
+    elsif current_turn == 'player_2'
+      self.current_turn = 'player_1'
     end
   end
 end

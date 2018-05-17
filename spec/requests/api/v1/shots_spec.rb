@@ -121,6 +121,7 @@ describe "Api::V1::Shots" do
 
         expect(game[:message]).to eq expected_messages
         expect(player_2_targeted_space).to eq("Hit")
+        expect(game[:current_turn]).to eq('player_2')
       end
 
       it 'does not allow a user to shoot on opponent turn' do
@@ -149,7 +150,7 @@ describe "Api::V1::Shots" do
           ship: sm_ship,
           start_space: "A1",
           end_space: "A2").run
-          
+
         game = create(:game,
           player_1: user_1.id,
           player_2: user_2.id,

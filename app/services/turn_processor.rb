@@ -2,7 +2,7 @@ class TurnProcessor
   def initialize(game, target, user)
     @game   = game
     @target = target
-    @player = PlayerDecorator.new(user, game.active_player_board)
+    @player = PlayerDecorator.new(user, game.active_board)
     @messages = []
   end
 
@@ -10,7 +10,7 @@ class TurnProcessor
     begin
       check_turn
       attack_opponent
-      ai_attack_back if @game.player_2.nil?
+      set_turn
       game.save!
     rescue InvalidAttack => e
       @messages << e.message
@@ -40,6 +40,14 @@ class TurnProcessor
   def check_turn
     unless @player.id == @game.active_player
       raise InvalidAttack.new('Invalid move. It\'s your opponent\'s turn')
+    end
+  end
+
+  def set_turn
+    if @game.player_2.nil?
+      ai_attack_back
+    else
+      game.switch_turn
     end
   end
 end
