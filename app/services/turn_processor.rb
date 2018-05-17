@@ -2,11 +2,13 @@ class TurnProcessor
   def initialize(game, target, user)
     @game   = game
     @target = target
+    @player = PlayerDecorator.new(user, game.player_1_board)
     @messages = []
   end
 
   def run!
     begin
+      check_turn
       attack_opponent
       ai_attack_back if @game.player_2.nil?
       game.save!
@@ -21,7 +23,7 @@ class TurnProcessor
 
   private
 
-  attr_reader :game, :target, :user
+  attr_reader :game, :target, :player
 
   def attack_opponent
     result = Shooter.fire!(board: game.player_2_board, target: target)
@@ -35,7 +37,9 @@ class TurnProcessor
     game.player_2_turns += 1
   end
 
-  def player
-    PlayerDecorator.new(user, game.player_1_board)
+  def check_turn
+    unless @player.id == @game.active_player
+      raise InvalidAttack.new('Invalid move. It\'s your opponent\'s turn')
+    end
   end
 end
