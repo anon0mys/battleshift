@@ -137,8 +137,6 @@ describe "Api::V1::Shots" do
 
         post "/api/v1/games/#{game.id}/shots", params: json_payload, headers: headers
 
-        expect(response.status).to eq(400)
-
         game = JSON.parse(response.body, symbolize_names: true)
 
         expected_messages = "Invalid move. It's your opponent's turn"
