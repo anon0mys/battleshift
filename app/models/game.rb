@@ -7,4 +7,12 @@ class Game < ApplicationRecord
 
   validates :player_1_board, presence: true
   validates :player_2_board, presence: true
+
+  def active_player
+    if current_turn == 'player_1'
+      player_1
+    else
+      player_2
+    end
+  end
 end
