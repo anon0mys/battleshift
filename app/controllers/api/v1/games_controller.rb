@@ -11,9 +11,6 @@ class Api::V1::GamesController < ApiController
     render json: Game.create({
       player_1_board: player_1.board,
       player_2_board: player_2.board,
-      winner: nil,
-      player_1_turns: 0,
-      player_2_turns: 0,
       current_turn: 'player_1'
       })
   end
