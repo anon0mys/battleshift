@@ -5,7 +5,7 @@ describe TurnProcessor do
     describe 'against a computer' do
       it 'runs a turn' do
         user_1 = create(:user)
-        game = create(:game, player_1: user_1.id, player_2: 'computer')
+        game = create(:game, player_1: user_1.id)
 
         processor = TurnProcessor.new(game, 'A1', user_1)
         processor.run!
@@ -18,10 +18,11 @@ describe TurnProcessor do
 
     describe 'against a player' do
       it 'runs a turn' do
-        game = create(:game)
-        user = create(:user)
+        user_1 = create(:user)
+        user_2 = create(:user)
+        game = create(:game, player_1: user_1.id, player_2: user_2.id)
 
-        processor = TurnProcessor.new(game, 'A1', user)
+        processor = TurnProcessor.new(game, 'A1', user_1)
         processor.run!
 
         expected_message = 'Your shot resulted in a Miss.'
