@@ -12,7 +12,7 @@ class TurnProcessor
       attack_opponent
       set_turn
       game.save!
-    rescue InvalidAttack => e
+    rescue ApiExceptions::InvalidAttack => e
       @messages << e.message
     end
   end
@@ -38,7 +38,7 @@ class TurnProcessor
 
   def check_turn
     unless @player.id == @game.active_player
-      raise InvalidAttack.new('Invalid move. It\'s your opponent\'s turn')
+      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 200)
     end
   end
 

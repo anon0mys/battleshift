@@ -22,10 +22,14 @@ module BattleshipWeb
     config.load_defaults 5.1
     config.before_initialize do |app|
       app.config.paths.add 'app/services/values', :eager_load => true
+      app.config.paths.add 'lib/api_exceptions', :eager_load => true
     end
 
     config.to_prepare do
       Dir[ File.expand_path(Rails.root.join("app/services/values/*.rb")) ].each do |file|
+        require_dependency file
+      end
+      Dir[ File.expand_path(Rails.root.join("lib/api_exceptions/*.rb")) ].each do |file|
         require_dependency file
       end
     end

@@ -9,7 +9,7 @@ class Shooter
     if valid_shot?
       space.attack!
     else
-      raise InvalidAttack.new("Invalid coordinates.")
+      raise ApiExceptions::InvalidAttack.new("Invalid coordinates.", 200)
     end
   end
 
