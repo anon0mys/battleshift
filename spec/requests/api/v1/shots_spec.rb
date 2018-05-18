@@ -134,6 +134,7 @@ describe "Api::V1::Shots" do
          'CONTENT_TYPE' => 'application/json',
          'X-API-Key' => user_2.api_key
          }
+
         json_payload = {target: "A1"}.to_json
 
         post "/api/v1/games/#{game.id}/shots", params: json_payload, headers: headers
@@ -178,6 +179,22 @@ describe "Api::V1::Shots" do
 
         expect(game[:message]).to eq expected_messages
         expect(player_1_targeted_space).to eq("Hit")
+      end
+
+      it 'does not allow invalid api keys' do
+        headers = {
+          'CONTENT_TYPE' => 'application/json',
+          'X-API-Key' => 'NotARealAPIKey'
+          }
+
+        json_payload = {target: "A1"}.to_json
+
+        post "/api/v1/games/#{game.id}/shots", params: json_payload, headers: headers
+
+        expect(@response.status).to eq(401)
+        response = JSON.parse(@response.body, symbolize_names: true)
+
+        expect(response[:message]).to eq("Unauthorized")
       end
     end
   end
