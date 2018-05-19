@@ -9,7 +9,7 @@ class Shooter
     if valid_shot?
       space.attack!
     else
-      raise InvalidAttack.new("Invalid coordinates.")
+      raise ApiExceptions::InvalidAttack.new("Invalid coordinates.", 200)
     end
   end
 
@@ -27,10 +27,4 @@ class Shooter
     def valid_shot?
       board.space_names.include?(target)
     end
-end
-
-class InvalidAttack < StandardError
-  def initialize(msg = "Invalid attack.")
-    super(msg)
-  end
 end

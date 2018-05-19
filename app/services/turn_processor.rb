@@ -2,15 +2,17 @@ class TurnProcessor
   def initialize(game, target, user)
     @game   = game
     @target = target
+    @player = PlayerDecorator.new(user, game.active_board)
     @messages = []
   end
 
   def run!
     begin
+      check_turn
       attack_opponent
-      ai_attack_back
+      set_turn
       game.save!
-    rescue InvalidAttack => e
+    rescue ApiExceptions::InvalidAttack => e
       @messages << e.message
     end
   end
@@ -21,21 +23,30 @@ class TurnProcessor
 
   private
 
-  attr_reader :game, :target, :user
+  attr_reader :game, :target, :player
 
   def attack_opponent
-    result = Shooter.fire!(board: game.player_2_board, target: target)
+    result = Shooter.fire!(board: game.target_board, target: target)
     @messages << "Your shot resulted in a #{result}."
-    game.player_1_turns += 1
   end
 
   def ai_attack_back
-    result = AiSpaceSelector.new(player.board).fire!
+    result = AiSpaceSelector.new(@player.board).fire!
     @messages << "The computer's shot resulted in a #{result}."
     game.player_2_turns += 1
   end
 
-  def player
-    PlayerDecorator.new(user, game.player_1_board)
+  def check_turn
+    unless @player.id == @game.active_player
+      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 200)
+    end
+  end
+
+  def set_turn
+    if @game.player_2.nil?
+      ai_attack_back
+    else
+      game.switch_turn
+    end
   end
 end
