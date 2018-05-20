@@ -45,4 +45,22 @@ feature 'user logs in' do
       expect(page).to have_content('Status: Active')
     end
   end
+
+  context 'attempts to register with bad information' do
+    scenario 'and is redirected to register path with flash error message' do
+      visit '/'
+      click_on 'Register'
+
+      expect(current_path).to eq('/register')
+
+      fill_in 'user[name]', with: 'TestName'
+      fill_in 'user[email]', with: 'Test@mail.com'
+      fill_in 'user[password]', with: 'password'
+
+      click_on 'submit'
+
+      expect(current_path).to eq('/register')
+      expect(page).to have_content('Registration unsuccessful')
+    end
+  end
 end
