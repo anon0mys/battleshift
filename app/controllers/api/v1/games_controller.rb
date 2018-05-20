@@ -15,7 +15,6 @@ class Api::V1::GamesController < ApiController
       player_1: player_1.id,
       player_2: player_2.id
       })
-      binding.pry
   end
 
   private

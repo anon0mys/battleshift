@@ -11,6 +11,5 @@ describe 'POST /api/v1/games' do
 
     expect(response.status).to eq(200)
     expect(game_response[:id]).to eq(1)
-    binding.pry
   end
 end

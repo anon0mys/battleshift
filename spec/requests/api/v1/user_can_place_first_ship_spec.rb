@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'user places ships' do
+describe 'user places first ship' do
   let(:player_1) { create(:user) }
   let(:player_2) { create(:user) }
   let(:not_player) {create(:user)}
