@@ -21,7 +21,7 @@ class Space
   end
 
   def occupied?
-    !!@contents
+    !@contents.nil?
   end
 
   def not_attacked?

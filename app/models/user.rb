@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   validates_presence_of :name, :email, :api_key
   validates_uniqueness_of :api_key
-  validates_presence_of :password_digest, on: :create
+  validates_presence_of :password_digest
   validates :password_digest, confirmation: {case_sensitive: true}
   has_secure_password
   enum status: ['inactive', 'active']

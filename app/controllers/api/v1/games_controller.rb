@@ -11,8 +11,11 @@ class Api::V1::GamesController < ApiController
     render json: Game.create({
       player_1_board: player_1.board,
       player_2_board: player_2.board,
-      current_turn: 'player_1'
+      current_turn: 'player_1',
+      player_1: player_1.id,
+      player_2: player_2.id
       })
+      binding.pry
   end
 
   private

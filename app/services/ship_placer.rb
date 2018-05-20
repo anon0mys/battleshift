@@ -1,9 +1,12 @@
 class ShipPlacer
+  attr_reader :board, :ship,
+  :start_space, :end_space, :message
   def initialize(board:, ship:, start_space:, end_space:)
     @board       = board
     @ship        = ship
     @start_space = start_space
     @end_space   = end_space
+    @messages    = []
   end
 
   def run
@@ -16,9 +19,11 @@ class ShipPlacer
     end
   end
 
+  def message
+    @messages.join(' ')
+  end
+
   private
-  attr_reader :board, :ship,
-    :start_space, :end_space
 
   def same_row?
     start_space[0] == end_space[0]
@@ -50,6 +55,17 @@ class ShipPlacer
       raise InvalidShipPlacement.new("Attempting to place ship in a space that is already occupied.")
     else
       space.occupy!(ship)
+    end
+    ship_objs = []
+    board.board.each do |row|
+      row.each do |space|
+        ship_objs << space[space.keys.first].contents
+      end
+    end
+    if ship_objs.uniq.length == 2
+      @messages << 'Successfully placed ship with a size of 3. You have 1 ship(s) to place with a size of 2.'
+    else
+      @messages << 'Successfully placed ship with a size of 2. You have 0 ship(s) to place.'
     end
   end
 end
