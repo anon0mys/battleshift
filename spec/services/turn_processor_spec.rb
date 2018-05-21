@@ -31,4 +31,25 @@ describe TurnProcessor do
       end
     end
   end
+
+  describe 'user hits a ship' do
+    context 'enough to cause damage equal to length' do
+      it 'and sinks the ship' do
+        user_1 = create(:user)
+        board = Board.new(4)
+        ship = Ship.new(2, 'A1', 'A2')
+        ShipPlacer.new(board, ship).run
+        game = create(:game, player_1: user_1, player_2_board: board)
+
+        expect(game.player_2_board.locate_space('A1').ship.is_sunk?).to_not be true
+
+        TurnProcessor.new(game, 'A1', user_1).run!
+        processor = TurnProcessor.new(game, 'A2', user_1)
+        processor.run!
+
+        expect(game.player_2_board.locate_space('A1').ship.is_sunk?).to be true
+        expect(processor.message).to include('Battleship sunk.')
+      end
+    end
+  end
 end
