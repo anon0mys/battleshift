@@ -22,7 +22,9 @@ class Api::V1::GamesController < ApiController
   def set_opponent(email)
     user = User.find_by(email: email)
     if user.nil?
-      user = User.create!(name: 'Artie', email: 'comp@ai.com', password: 'password')
+      user = User.new(name: 'Artie', email: 'comp@ai.com', password: 'password')
+      user.set_api_key
+      user.save
     end
     user
   end
