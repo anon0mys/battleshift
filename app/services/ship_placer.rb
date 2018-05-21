@@ -61,7 +61,7 @@ class ShipPlacer
     ship_objs = []
     board.board.map do |row|
       row.map do |space|
-        ship_objs << space[space.keys.first].contents
+        ship_objs << space[space.keys.first].ship
       end
     end
     if ship_objs.uniq.length == 2

@@ -29,8 +29,38 @@ class TurnProcessor
   attr_reader :game, :target, :player
 
   def attack_opponent
-    result = Shooter.fire!(board: game.target_board, target: target)
-    @messages << "Your shot resulted in a #{result}."
+    begin
+      raise GameOver.new('Invalid move. Game over.') unless @game.winner.nil?
+      board = game.target_board
+      result = Shooter.fire!(board: board, target: target)
+      @messages << "Your shot resulted in a #{result}."
+      if result == 'Hit' && board.locate_space(@target).ship.is_sunk?
+        @messages << 'Battleship sunk.'
+      end
+      if result == 'Hit'
+        ships_status = get_all_ships.map { |space| space.ship.is_sunk? }
+        unless ships_status.include?(false)
+          @messages << 'Game over.'
+          @game.winner = @game.active_player.email
+          @game.save!
+        end
+      end
+    rescue GameOver => e
+      @messages << e.message
+      @status = 400
+    end
+  end
+
+  def get_all_ships
+    spaces.select do |space|
+      space.occupied?
+    end
+  end
+
+  def spaces
+    @game.target_board.board.flatten.map do |hash|
+      hash.values
+    end.flatten
   end
 
   def ai_attack_back
@@ -51,5 +81,11 @@ class TurnProcessor
     else
       game.switch_turn
     end
+  end
+end
+
+class GameOver < StandardError
+  def initialize(msg)
+    super(msg)
   end
 end

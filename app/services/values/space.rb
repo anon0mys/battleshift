@@ -1,15 +1,15 @@
 class Space
-  attr_reader :coordinates, :status, :contents
+  attr_reader :coordinates, :status, :ship
 
   def initialize(coordinates)
     @coordinates = coordinates
-    @contents    = nil
+    @ship    = nil
     @status      = "Not Attacked"
   end
 
   def attack!
-    @status = if contents && not_attacked?
-                contents.attack!
+    @status = if ship && not_attacked?
+                ship.attack!
                 "Hit"
               else
                 "Miss"
@@ -17,11 +17,11 @@ class Space
   end
 
   def occupy!(ship)
-    @contents = ship
+    @ship = ship
   end
 
   def occupied?
-    !@contents.nil?
+    !@ship.nil?
   end
 
   def not_attacked?
