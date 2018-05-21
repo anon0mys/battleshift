@@ -5,8 +5,8 @@ describe 'user places second ship' do
   let(:player_2) { create(:user) }
   let(:not_player) {create(:user)}
   let(:game) { create(:game,
-               player_1: player_1.id,
-               player_2: player_2.id)
+               player_1: player_1,
+               player_2: player_2)
   }
 
   scenario 'works' do

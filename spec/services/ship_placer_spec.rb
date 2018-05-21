@@ -1,4 +1,4 @@
-# require 'spec_helper'
+# require 'rails_helper'
 # require './app/services/ship_placer'
 # require './app/services/values/board'
 # require './app/services/values/space'

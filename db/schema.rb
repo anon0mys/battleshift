@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180517031903) do
+ActiveRecord::Schema.define(version: 20180521005054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,8 +24,10 @@ ActiveRecord::Schema.define(version: 20180517031903) do
     t.integer "current_turn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "player_1"
-    t.integer "player_2"
+    t.bigint "player_1_id"
+    t.bigint "player_2_id"
+    t.index ["player_1_id"], name: "index_games_on_player_1_id"
+    t.index ["player_2_id"], name: "index_games_on_player_2_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -38,4 +40,6 @@ ActiveRecord::Schema.define(version: 20180517031903) do
     t.string "api_key"
   end
 
+  add_foreign_key "games", "users", column: "player_1_id"
+  add_foreign_key "games", "users", column: "player_2_id"
 end

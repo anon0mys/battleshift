@@ -9,7 +9,7 @@ describe "Api::V1::Shots" do
       let(:sm_ship) { Ship.new(2, 'A1', 'A2') }
       let(:game)    {
         create(:game,
-          player_1: user_1.id,
+          player_1: user_1,
           player_1_board: player_1_board,
           player_2_board: player_2_board
         )
@@ -65,7 +65,7 @@ describe "Api::V1::Shots" do
       it "updates the message but not the board with invalid coordinates" do
         player_1_board = Board.new(1)
         player_2_board = Board.new(1)
-        game = create(:game, player_1: user_1.id, player_1_board: player_1_board, player_2_board: player_2_board)
+        game = create(:game, player_1: user_1, player_1_board: player_1_board, player_2_board: player_2_board)
 
         headers = {
           'CONTENT_TYPE' => 'application/json',
@@ -87,8 +87,8 @@ describe "Api::V1::Shots" do
       let(:sm_ship) { Ship.new(2, 'A1', 'A2') }
       let(:game)    {
         create(:game,
-          player_1: user_1.id,
-          player_2: user_2.id,
+          player_1: user_1,
+          player_2: user_2,
           player_1_board: player_1_board,
           player_2_board: player_2_board
         )
@@ -141,8 +141,8 @@ describe "Api::V1::Shots" do
         ShipPlacer.new(new_player_1_board, sm_ship).run
 
         game = create(:game,
-          player_1: user_1.id,
-          player_2: user_2.id,
+          player_1: user_1,
+          player_2: user_2,
           player_1_board: new_player_1_board,
           player_2_board: player_2_board,
           current_turn: 'player_2'

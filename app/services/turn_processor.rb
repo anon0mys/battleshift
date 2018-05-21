@@ -37,13 +37,13 @@ class TurnProcessor
   end
 
   def check_turn
-    unless @player.id == @game.active_player
+    unless @player.id == @game.active_player.id
       raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 200)
     end
   end
 
   def set_turn
-    if @game.player_2.nil?
+    if @game.player_2.name == 'Artie'
       ai_attack_back
     else
       game.switch_turn

@@ -5,16 +5,15 @@ describe 'user places first ship' do
   let(:player_2) { create(:user) }
   let(:not_player) {create(:user)}
   let(:game) { create(:game,
-               player_1: player_1.id,
-               player_2: player_2.id)
-  }
+               player_1: player_1,
+               player_2: player_2) }
 
   scenario 'works' do
-    headers = { 'X-API-Key' => player_1.api_key,
-                'CONTENT_TYPE' => 'application/json' }
+    headers   = { 'X-API-Key' => player_1.api_key,
+                  'CONTENT_TYPE' => 'application/json' }
     ship_json = { ship_size: 3,
-                start_space: 'A1',
-                end_space: 'A3' }.to_json
+                  start_space: 'A1',
+                  end_space: 'A3' }.to_json
 
     post "/api/v1/games/#{game.id}/ships", params: ship_json, headers: headers
     json = JSON.parse(response.body, symbolize_names: true)

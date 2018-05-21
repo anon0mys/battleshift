@@ -1,4 +1,7 @@
 class Game < ApplicationRecord
+  belongs_to :player_1, class_name: 'User'
+  belongs_to :player_2, class_name: 'User'
+
   attr_accessor :messages
 
   enum current_turn: ['player_1', 'player_2']
@@ -7,6 +10,14 @@ class Game < ApplicationRecord
 
   validates :player_1_board, presence: true
   validates :player_2_board, presence: true
+
+  def determine_player_board(player)
+    if player_1.id == player.id
+      player_1_board
+    elsif player_2.id == player.id
+      player_2_board
+    end
+  end
 
   def active_player
     if current_turn == 'player_1'

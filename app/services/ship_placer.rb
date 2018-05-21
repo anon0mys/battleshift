@@ -2,7 +2,7 @@ class ShipPlacer
   attr_reader :board, :ship, :message
 
   def initialize(board, ship)
-    @board     = board
+    @board    = board
     @ship     = ship
     @messages = []
   end
