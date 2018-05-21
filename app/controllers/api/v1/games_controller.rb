@@ -5,6 +5,9 @@ class Api::V1::GamesController < ApiController
   end
 
   def create
+    player_1 = PlayerDecorator.new(set_player, Board.new(4))
+    player_2 = PlayerDecorator.new(set_opponent(params[:opponent_email]), Board.new(4))
+
     render json: Game.create({
       player_1_board: Board.new(4),
       player_2_board: Board.new(4),

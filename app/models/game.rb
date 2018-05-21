@@ -20,11 +20,7 @@ class Game < ApplicationRecord
   end
 
   def active_player
-    if current_turn == 'player_1'
-      player_1
-    elsif current_turn == 'player_2'
-      player_2
-    end
+    self.send(current_turn)
   end
 
   def active_board

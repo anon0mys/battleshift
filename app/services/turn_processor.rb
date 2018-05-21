@@ -30,7 +30,7 @@ class TurnProcessor
 
   def attack_opponent
     begin
-      raise GameOver.new('Invalid move. Game over.') unless @game.winner.nil?
+      raise ApiExceptions::GameOver.new('Invalid move. Game over.') unless @game.winner.nil?
       board = game.target_board
       result = Shooter.fire!(board: board, target: target)
       @messages << "Your shot resulted in a #{result}."
@@ -45,7 +45,7 @@ class TurnProcessor
           @game.save!
         end
       end
-    rescue GameOver => e
+    rescue ApiExceptions::GameOver => e
       @messages << e.message
       @status = 400
     end
@@ -71,7 +71,7 @@ class TurnProcessor
 
   def check_turn
     unless @player.id == @game.active_player.id
-      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 400)
+      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn')
     end
   end
 
@@ -81,11 +81,5 @@ class TurnProcessor
     else
       game.switch_turn
     end
-  end
-end
-
-class GameOver < StandardError
-  def initialize(msg)
-    super(msg)
   end
 end
