@@ -7,14 +7,19 @@ describe ShipPlacer do
   let(:board) { build(:board) }
 
   it 'exists when provided a board and ship' do
-    ship = build(:ship)
+    ship = Ship.new(2, 'A1', 'A2')
     ship_placer = ShipPlacer.new(board, ship)
 
     expect(ship_placer).to be_a ShipPlacer
   end
 
   it 'places a horizontal ship' do
-    ship = build(:ship)
+    a1 = board.locate_space("A1")
+    a2 = board.locate_space("A2")
+    a3 = board.locate_space("A3")
+    b1 = board.locate_space("B1")
+
+    ship = Ship.new(2, 'A1', 'A2')
     ship_placer = ShipPlacer.new(board, ship)
 
     ship_placer.run
@@ -25,54 +30,91 @@ describe ShipPlacer do
     expect(b1.ship).to be_nil
   end
 
-  it 'places the ship within a column with empty spaces' do
-    a1 = board.locate_space('A1')
-    b1 = board.locate_space('B1')
+  it 'places a vertical ship' do
+    a1 = board.locate_space("A1")
+    a2 = board.locate_space("A2")
+    b1 = board.locate_space("B1")
+    b2 = board.locate_space("B2")
 
-    neighbor_1 = board.locate_space('A2')
-    neighbor_2 = board.locate_space('B2')
+    ship = Ship.new(2, 'A1', 'B1')
+    ship_placer = ShipPlacer.new(board, ship)
 
-    expect(a1.ship).to be_nil
-    expect(b1.ship).to be_nil
-    expect(neighbor_1.ship).to be_nil
-    expect(neighbor_2.ship).to be_nil
-
-    ship = Ship.new(2, 'A1', 'A2')
-    subject.run
+    ship_placer.run
 
     expect(a1.ship).to eq(ship)
     expect(b1.ship).to eq(ship)
-    expect(neighbor_1.ship).to be_nil
-    expect(neighbor_2.ship).to be_nil
+    expect(a2.ship).to be_nil
+    expect(b2.ship).to be_nil
   end
 
   it 'doesn\'t place the ship if it isn\'t within the same row or column' do
     ship = Ship.new(2, 'A1', 'B2')
+    ship_placer = ShipPlacer.new(board, ship)
 
-    expect { ShipPlacer.new(board, ship).run }.to raise_error(InvalidShipPlacement)
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Ship must be in either the same row or column.')
   end
 
   it "doesn't place the ship if the space is occupied when placing in columns" do
-    ship   = Ship.new(2, 'A1', 'B1')
+    ship_1   = Ship.new(2, 'A1', 'B1')
+    ship_2   = Ship.new(2, 'A1', 'B1')
 
-    expect { ShipPlacer.new(board, ship).run }.to raise_error(InvalidShipPlacement)
+    ShipPlacer.new(board, ship_1).run
+
+    ship_placer = ShipPlacer.new(board, ship_2)
+
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Attempting to place ship in a space that is already occupied.')
   end
 
   it "doesn't place the ship if the space is occupied when placing in rows" do
-    ship = Ship.new(2, 'A1', 'A2')
+    ship_1 = Ship.new(2, 'A1', 'A2')
+    ship_2 = Ship.new(2, 'A1', 'A2')
 
-    expect { ShipPlacer.new(board, ship).run }.to raise_error(InvalidShipPlacement)
+    ShipPlacer.new(board, ship_1).run
+
+    ship_placer = ShipPlacer.new(board, ship_2)
+
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Attempting to place ship in a space that is already occupied.')
   end
 
   it "doesn't place the ship if the ship is smaller than the supplied range in a row" do
     ship = Ship.new(2, 'A1', 'A3')
+    ship_placer = ShipPlacer.new(board, ship)
 
-    expect { ShipPlacer.new(board, ship).run }.to raise_error(InvalidShipPlacement)
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Ship size must be equal to the number of spaces you are trying to fill.')
   end
 
   it "doesn't place the ship if the ship is smaller than the supplied range in a column" do
     ship = Ship.new(2, 'A1', 'C1')
+    ship_placer = ShipPlacer.new(board, ship)
 
-    expect { ShipPlacer.new(board, ship).run }.to raise_error(InvalidShipPlacement)
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Ship size must be equal to the number of spaces you are trying to fill.')
+  end
+
+  it "doesn't place the ship if the ship is larger than the supplied range in a row" do
+    ship = Ship.new(3, 'A1', 'A2')
+    ship_placer = ShipPlacer.new(board, ship)
+
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Ship size must be equal to the number of spaces you are trying to fill.')
+  end
+
+  it "doesn't place the ship if the ship is larger than the supplied range in a column" do
+    ship = Ship.new(3, 'A1', 'B1')
+    ship_placer = ShipPlacer.new(board, ship)
+
+    ship_placer.run
+
+    expect(ship_placer.messages).to include('Ship size must be equal to the number of spaces you are trying to fill.')
   end
 end
