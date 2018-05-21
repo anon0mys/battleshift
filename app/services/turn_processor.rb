@@ -1,9 +1,11 @@
 class TurnProcessor
+  attr_reader :status
   def initialize(game, target, user)
     @game   = game
     @target = target
     @player = PlayerDecorator.new(user, game.active_board)
     @messages = []
+    @status = 200
   end
 
   def run!
@@ -14,6 +16,7 @@ class TurnProcessor
       game.save!
     rescue ApiExceptions::InvalidAttack => e
       @messages << e.message
+      @status = 400
     end
   end
 
@@ -38,7 +41,7 @@ class TurnProcessor
 
   def check_turn
     unless @player.id == @game.active_player.id
-      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 200)
+      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 400)
     end
   end
 

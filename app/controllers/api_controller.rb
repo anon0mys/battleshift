@@ -20,7 +20,7 @@ class ApiController < ActionController::API
   end
 
   def invalid_player(exception)
-    # render json: { message: exception.message }, status: 200
+    render json: { message: exception.message }, status: 200
   end
 
   def set_game
@@ -30,7 +30,7 @@ class ApiController < ActionController::API
   def validate_player
     player = set_player
     unless player == set_game.player_1 || player == set_game.player_2
-      # raise ApiExceptions::InvalidPlayer.new('You are not a player in this game', 200)
+      raise ApiExceptions::InvalidApiKey.new('You are not a player in this game', 200)
     end
     player
   end

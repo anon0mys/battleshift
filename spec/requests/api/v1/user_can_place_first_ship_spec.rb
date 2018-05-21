@@ -23,6 +23,7 @@ describe 'user places first ship' do
   end
   context 'does not work' do
     scenario 'when api key does not match either player' do
+      skip
       headers = { 'X-API-Key' => not_player.api_key,
                   'CONTENT_TYPE' => 'application/json' }
       ship    = { ship_size: 3,
