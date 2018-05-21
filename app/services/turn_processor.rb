@@ -32,19 +32,23 @@ class TurnProcessor
     begin
       raise ApiExceptions::GameOver.new('Invalid move. Game over.') unless @game.winner.nil?
       board = game.target_board
-      result = Shooter.fire!(board: board, target: target)
-      @messages << "Your shot resulted in a #{result}."
-      if result == 'Hit' && board.locate_space(@target).ship.is_sunk?
-        @messages << 'Battleship sunk.'
-        game_end
-      end
+      shot = Shooter.fire!(board: board, target: target)
+      shot_results(shot, board)
     rescue ApiExceptions::GameOver => e
       @messages << e.message
       @status = 400
     end
   end
 
-  def game_end
+  def shot_results(result, board)
+    @messages << "Your shot resulted in a #{result}."
+    if result == 'Hit' && board.locate_space(@target).ship.is_sunk?
+      @messages << 'Battleship sunk.'
+      game_end?
+    end
+  end
+
+  def game_end?
     unless ships_sunk.include?(false)
       @messages << 'Game over.'
       @game.winner = @game.active_player.email
