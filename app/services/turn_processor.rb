@@ -71,7 +71,7 @@ class TurnProcessor
 
   def check_turn
     unless @player.id == @game.active_player.id
-      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn', 400)
+      raise ApiExceptions::InvalidAttack.new('Invalid move. It\'s your opponent\'s turn')
     end
   end
 

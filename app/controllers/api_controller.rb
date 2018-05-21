@@ -2,12 +2,12 @@ class ApiController < ActionController::API
   include ActionController::Helpers
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   rescue_from ApiExceptions::InvalidApiKey, with: :unauthorized
-  # rescue_from ApiExceptions::InvalidPlayer, with: :invalid_player
+  rescue_from ApiExceptions::InvalidPlayer, with: :invalid_player
   helper_method :set_player, :set_game
 
   def set_player
     @player = User.find_by(api_key: request.headers['X-API-Key'])
-    raise ApiExceptions::InvalidApiKey.new('Unauthorized', 401) if @player.nil?
+    raise ApiExceptions::InvalidApiKey.new('Unauthorized') if @player.nil?
     @player
   end
 
@@ -30,7 +30,7 @@ class ApiController < ActionController::API
   def validate_player
     player = set_player
     unless player == set_game.player_1 || player == set_game.player_2
-      raise ApiExceptions::InvalidApiKey.new('You are not a player in this game', 200)
+      raise ApiExceptions::InvalidPlayer.new('You are not a player in this game')
     end
     player
   end

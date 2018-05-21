@@ -3,8 +3,7 @@ module ApiExceptions
     include ActiveModel::Serialization
     attr_reader :status
 
-    def initialize(msg, status)
-      @status = status
+    def initialize(msg)
       super(msg)
     end
   end
