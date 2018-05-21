@@ -5,6 +5,6 @@ class Api::V1::Games::ShotsController < ApiController
     turn_processor = TurnProcessor.new(@game, params[:shot][:target], set_player)
 
     turn_processor.run!
-    render json: @game, message: turn_processor.message
+    render json: @game, message: turn_processor.message, status: turn_processor.status
   end
 end

@@ -45,7 +45,9 @@ class Board
   def locate_space(coordinates)
     @board.each do |row|
       row.each do |space_hash|
-        return space_hash[coordinates] if space_hash.keys[0] == coordinates
+        if space_hash.keys[0] == coordinates
+          return space_hash[coordinates]
+        end
       end
     end
   end
@@ -203,4 +205,3 @@ class Board
     get_column(coordinate) == "1"
   end
 end
-

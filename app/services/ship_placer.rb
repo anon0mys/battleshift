@@ -1,9 +1,10 @@
 class ShipPlacer
-  def initialize(board:, ship:, start_space:, end_space:)
-    @board       = board
-    @ship        = ship
-    @start_space = start_space
-    @end_space   = end_space
+  attr_reader :board, :ship, :message
+
+  def initialize(board, ship)
+    @board    = board
+    @ship     = ship
+    @messages = []
   end
 
   def run
@@ -16,31 +17,37 @@ class ShipPlacer
     end
   end
 
+  def message
+    @messages.join(' ')
+  end
+
   private
-  attr_reader :board, :ship,
-    :start_space, :end_space
 
   def same_row?
-    start_space[0] == end_space[0]
+    ship.start_space[0] == ship.end_space[0]
   end
 
   def same_column?
-    start_space[1] == end_space[1]
+    ship.start_space[1] == ship.end_space[1]
   end
 
   def place_in_row
-    row = start_space[0]
-    range = start_space[1]..end_space[1]
-    msg = "Ship size must be equal to the number of spaces you are trying to fill."
-    raise InvalidShipPlacement unless range.count == ship.length
-    range.each { |column| place_ship(row, column) }
+    begin
+      row = ship.start_space[0]
+      range = ship.start_space[1]..ship.end_space[1]
+      msg = "Ship size must be equal to the number of spaces you are trying to fill."
+      raise InvalidShipPlacement unless range.count == ship.length
+      range.map { |column| place_ship(row, column) }
+    rescue InvalidShipPlacement => e
+      @messages << e.message
+    end
   end
 
   def place_in_column
-    column = start_space[1]
-    range   = start_space[0]..end_space[0]
+    column = ship.start_space[1]
+    range  = ship.start_space[0]..ship.end_space[0]
     raise InvalidShipPlacement unless range.count == ship.length
-    range.each { |row| place_ship(row, column) }
+    range.map { |row| place_ship(row, column) }
   end
 
   def place_ship(row, column)
@@ -50,6 +57,17 @@ class ShipPlacer
       raise InvalidShipPlacement.new("Attempting to place ship in a space that is already occupied.")
     else
       space.occupy!(ship)
+    end
+    ship_objs = []
+    board.board.map do |row|
+      row.map do |space|
+        ship_objs << space[space.keys.first].ship
+      end
+    end
+    if ship_objs.uniq.length == 2
+      @messages << 'Successfully placed ship with a size of 3. You have 1 ship(s) to place with a size of 2.'
+    else
+      @messages << 'Successfully placed ship with a size of 2. You have 0 ship(s) to place.'
     end
   end
 end

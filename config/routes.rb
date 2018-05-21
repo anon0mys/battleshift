@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :games, only: %i[show create] do
         post '/shots', to: 'games/shots#create'
+        post '/ships', to: 'games/ships#create'
       end
     end
   end
