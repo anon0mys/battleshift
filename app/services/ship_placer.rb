@@ -1,12 +1,10 @@
 class ShipPlacer
-  attr_reader :board, :ship,
-  :start_space, :end_space, :message
-  def initialize(board:, ship:, start_space:, end_space:)
-    @board       = board
-    @ship        = ship
-    @start_space = start_space
-    @end_space   = end_space
-    @messages    = []
+  attr_reader :board, :ship, :message
+
+  def initialize(board, ship)
+    @board     = board
+    @ship     = ship
+    @messages = []
   end
 
   def run
@@ -26,26 +24,30 @@ class ShipPlacer
   private
 
   def same_row?
-    start_space[0] == end_space[0]
+    ship.start_space[0] == ship.end_space[0]
   end
 
   def same_column?
-    start_space[1] == end_space[1]
+    ship.start_space[1] == ship.end_space[1]
   end
 
   def place_in_row
-    row = start_space[0]
-    range = start_space[1]..end_space[1]
-    msg = "Ship size must be equal to the number of spaces you are trying to fill."
-    raise InvalidShipPlacement unless range.count == ship.length
-    range.each { |column| place_ship(row, column) }
+    begin
+      row = ship.start_space[0]
+      range = ship.start_space[1]..ship.end_space[1]
+      msg = "Ship size must be equal to the number of spaces you are trying to fill."
+      raise InvalidShipPlacement unless range.count == ship.length
+      range.map { |column| place_ship(row, column) }
+    rescue InvalidShipPlacement => e
+      @messages << e.message
+    end
   end
 
   def place_in_column
-    column = start_space[1]
-    range   = start_space[0]..end_space[0]
+    column = ship.start_space[1]
+    range  = ship.start_space[0]..ship.end_space[0]
     raise InvalidShipPlacement unless range.count == ship.length
-    range.each { |row| place_ship(row, column) }
+    range.map { |row| place_ship(row, column) }
   end
 
   def place_ship(row, column)
@@ -57,8 +59,8 @@ class ShipPlacer
       space.occupy!(ship)
     end
     ship_objs = []
-    board.board.each do |row|
-      row.each do |space|
+    board.board.map do |row|
+      row.map do |space|
         ship_objs << space[space.keys.first].contents
       end
     end

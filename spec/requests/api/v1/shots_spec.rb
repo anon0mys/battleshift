@@ -6,7 +6,7 @@ describe "Api::V1::Shots" do
       let(:user_1) { create(:user) }
       let(:player_1_board)   { Board.new(4) }
       let(:player_2_board)   { Board.new(4) }
-      let(:sm_ship) { Ship.new(2) }
+      let(:sm_ship) { Ship.new(2, 'A1', 'A2') }
       let(:game)    {
         create(:game,
           player_1: user_1.id,
@@ -17,10 +17,7 @@ describe "Api::V1::Shots" do
 
       it "updates the message and board with a hit" do
         allow_any_instance_of(AiSpaceSelector).to receive(:fire!).and_return("Miss")
-        ShipPlacer.new(board: player_2_board,
-                       ship: sm_ship,
-                       start_space: "A1",
-                       end_space: "A2").run
+        ShipPlacer.new(player_2_board, sm_ship).run
 
         headers = {
           'CONTENT_TYPE' => 'application/json',
@@ -87,7 +84,7 @@ describe "Api::V1::Shots" do
       let(:user_2) { create(:user) }
       let(:player_1_board)   { Board.new(4) }
       let(:player_2_board)   { Board.new(4) }
-      let(:sm_ship) { Ship.new(2) }
+      let(:sm_ship) { Ship.new(2, 'A1', 'A2') }
       let(:game)    {
         create(:game,
           player_1: user_1.id,
@@ -98,10 +95,7 @@ describe "Api::V1::Shots" do
       }
 
       it 'updates the message and board with a hit' do
-        ShipPlacer.new(board: player_2_board,
-                       ship: sm_ship,
-                       start_space: "A1",
-                       end_space: "A2").run
+        ShipPlacer.new(player_2_board, sm_ship).run
 
         headers = {
           'CONTENT_TYPE' => 'application/json',
@@ -125,10 +119,7 @@ describe "Api::V1::Shots" do
       end
 
       it 'does not allow a user to shoot on opponent turn' do
-        ShipPlacer.new(board: player_2_board,
-                       ship: sm_ship,
-                       start_space: "A1",
-                       end_space: "A2").run
+        ShipPlacer.new(player_2_board, sm_ship).run
 
         headers = {
          'CONTENT_TYPE' => 'application/json',
@@ -147,10 +138,7 @@ describe "Api::V1::Shots" do
       it 'allows player 2 to shoot at player 1 board' do
         new_player_1_board = Board.new(4)
 
-        ShipPlacer.new(board: new_player_1_board,
-          ship: sm_ship,
-          start_space: "A1",
-          end_space: "A2").run
+        ShipPlacer.new(new_player_1_board, sm_ship).run
 
         game = create(:game,
           player_1: user_1.id,
