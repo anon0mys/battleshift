@@ -5,42 +5,23 @@ describe 'GET /api/v1/games/1' do
     it 'returns a game with boards' do
       player_1_board = Board.new(4)
       player_2_board = Board.new(4)
-      sm_ship = Ship.new(2)
-      md_ship = Ship.new(3)
+      sm_ship = Ship.new(2, 'A1', 'A2')
+      md_ship = Ship.new(3, 'B1', 'D1')
 
-      ShipPlacer.new(board: player_1_board,
-                     ship: sm_ship,
-                     start_space: "A1",
-                     end_space: "A2"
-                    ).run
+      ShipPlacer.new(player_1_board, sm_ship).run
+      ShipPlacer.new(player_1_board, md_ship).run
+      ShipPlacer.new(player_2_board, sm_ship.dup).run
+      ShipPlacer.new(player_2_board, md_ship.dup).run
 
-      ShipPlacer.new(board: player_1_board,
-                     ship: md_ship,
-                     start_space: "B1",
-                     end_space: "D1"
-                    ).run
+      game_attrs = { player_1_board: player_1_board,
+                     player_2_board: player_2_board,
+                     player_1_turns: 0,
+                     player_2_turns: 0,
+                     current_turn: 'player_1',
+                     player_1: create(:user),
+                     player_2: create(:user) }
 
-      ShipPlacer.new(board: player_2_board,
-                     ship: sm_ship.dup,
-                     start_space: "A1",
-                     end_space: "A2"
-                    ).run
-
-      ShipPlacer.new(board: player_2_board,
-                     ship: md_ship.dup,
-                     start_space: "B1",
-                     end_space: "D1"
-                    ).run
-
-      game_attributes = {
-                      player_1_board: player_1_board,
-                      player_2_board: player_2_board,
-                      player_1_turns: 0,
-                      player_2_turns: 0,
-                      current_turn: 'player_1'
-                    }
-
-      game = Game.new(game_attributes)
+      game = Game.new(game_attrs)
       game.save!
 
       get "/api/v1/games/#{game.id}"

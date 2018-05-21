@@ -5,7 +5,7 @@ describe TurnProcessor do
     describe 'against a computer' do
       it 'runs a turn' do
         user_1 = create(:user)
-        game = create(:game, player_1: user_1.id)
+        game = create(:game, player_1: user_1)
 
         processor = TurnProcessor.new(game, 'A1', user_1)
         processor.run!
@@ -20,7 +20,7 @@ describe TurnProcessor do
       it 'runs a turn' do
         user_1 = create(:user)
         user_2 = create(:user)
-        game = create(:game, player_1: user_1.id, player_2: user_2.id)
+        game = create(:game, player_1: user_1, player_2: user_2)
 
         processor = TurnProcessor.new(game, 'A1', user_1)
         processor.run!
